@@ -13,43 +13,31 @@
           docker_users:
             - app
 
-    - name: Copying application files
+    - name: Cloning repo
       git:
         repo: "{{ lookup('env', 'REPO_URL') }}"
         dest: /tmp/git_repo
         version: "{{ lookup('env', 'BRANCH_NAME') }}"
 
-    - name: Copying application files2
-      command:
-        cmd: mv /tmp/git_repo/todo-list-app /home/app/
-
-    - name: Copying application files3
-      command:
-        cmd: mv /tmp/git_repo/docker-compose.yaml /home/app/
-
-    - name: Change file ownership, group and permissions
-      file:
-        path: /home/app/todo-list-app
-        mode: '0755'
-
-    - name: Change file ownership, group and permissions2
-      file:
-        path: /home/app/docker-compose.yaml
-        mode: '0644'
+    - name: Copying application files
+      copy:
+        src: "{{ item.src }}"
+        dest: /home/app/
+        owner: app
+        group: app
+        mode: "{{ item.mode }}"
+        remote_src: yes
+      loop:
+        - { src: "/tmp/git_repo/todo-list-app", mode: '0755' }
+        - { src: "/tmp/git_repo/main.yml", mode: '0644' }
 
     - name: Copying env file
       copy:
         src: "../.env"
-        dest: /home/app/
-        mode: "0644"
-
-    - name: Setting correct ownership and permissions
-      file:
-        path: /home/app
-        state: directory
-        recurse: yes
         owner: app
         group: app
+        dest: /home/app/
+        mode: "0644"
 
     - name: Remove the temporary repository clone
       file:
