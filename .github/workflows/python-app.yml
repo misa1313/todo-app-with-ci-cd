@@ -144,5 +144,5 @@ jobs:
     - name: Running playbook
       working-directory: ./ansible
       run: |
-        ansible-galaxy install -r ./requirements.yaml
+        ansible-galaxy install -r ./requirements.yml
         ansible-playbook deploy.yml --inventory inventory --extra-vars ansible_ssh_private_key_file=ansible_key
