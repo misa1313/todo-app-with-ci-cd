@@ -17,6 +17,7 @@
       git:
         repo: "{{ lookup('env', 'REPO_URL') }}"
         dest: /tmp/git_repo
+        single_branch: yes
         version: "{{ lookup('env', 'BRANCH_NAME') }}"
 
     - name: Copying application files
@@ -29,7 +30,7 @@
         remote_src: yes
       loop:
         - { src: "/tmp/git_repo/todo-list-app", mode: '0755' }
-        - { src: "/tmp/git_repo/main.yml", mode: '0644' }
+        - { src: "/tmp/git_repo/docker-compose.yml", mode: '0644' }
 
     - name: Copying env file
       copy:
